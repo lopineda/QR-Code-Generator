@@ -1,3 +1,4 @@
+/* Base Reset */
 *{
     box-sizing: border-box;
 }
@@ -5,42 +6,45 @@
 body{
     background: #1c1e26;
     font-family: sans-serif;
+    color: #fff;
+    margin: 0 auto;
     max-width: 500px;
     height: 100vh;
-    margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
 }
 
+/* Color Pickers */
 input[type="color"]{
-    border: none;
     width: 32.5%;
     height: 40px;
+    border: none;
     border-radius: 3px;
+    transition: box-shadow 0.3 ease;
 }
 
-input[type="color"]::-webkit-inner-swatch-wrapper{
+input[type="color"]:hover{
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Remove native swatch borders */
+input[type="color"]::webkit-inner-swatch-wrapper {
     padding: 0;
 }
 
-input[type="color"]::-webkit-color-swatch{
+input[type="color"]::webkit-color-swatch {
     border: none;
 }
 
-a{
-    text-decoration: none;
-}
-
+/* QR Text Input */
 .qr-text{
+    width: 100%;
     padding: 1rem;
-    display: block;
+    margin: 0.5rem 0 1rem;
     background: #181b29;
     border: 1px solid #414866;
     border-radius: 4px;
-    width: 100%;
-    margin: 0.5rem 0 1rem;
     color: #fff;
     outline: none;
 }
@@ -50,6 +54,7 @@ a{
     font-weight: 500;
 }
 
+/* QR Code Box */
 #qr-code{
     height: 500px;
     width: 500px;
@@ -59,17 +64,14 @@ a{
     border: 1px solid #414866;
 }
 
-#qr-code img, #qr-code canvas{
+#qr-code img, 
+#qr-code canvas {
     max-width: 100% !important;
     max-height: 100% !important;
+    animation: bounceIn 0.4s ease-out;
 }
 
-.row{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
+/* Dropdown */
 .sizes{
     width: 32.5%;
     height: 40px;
@@ -80,20 +82,26 @@ a{
     outline: none;
 }
 
+/* Action Buttons*/
 .btn{
     background: rgb(106, 43, 255);
     color: #fff;
     border: none;
     border-radius: 4px;
     padding: 14px;
-    max-width: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
     font-size: 1.1rem;
     font-weight: 500;
+    cursor: pointer;
     flex: 1;
+    max-width: 200px;
+    transition: transform 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
 }
 
 .btn img{
@@ -105,25 +113,32 @@ a{
     margin-left: 0.7rem;
 }
 
+/* Button container with entrance animation*/
 .action-container{
     display: flex;
     margin: 1rem;
+    animation: slideInUp 0.5s ease;
 }
 
+/* Responsive */
 @media (max-width: 512px){
-    body{
+    body {
         max-width: 100%;
         padding: 10px;
     }
-    #qr-code{
+
+    #qr-code {
         width: 95vw;
         height: 95vw;
     }
-    #qr-code img, #qr-code canvas{
+
+    #qr-code img,
+    #qr-code canvas {
         max-width: 95vw !important;
         max-height: 95vw !important;
     }
-    .btn{
+
+    .btn {
         min-width: unset;
     }
 }
@@ -132,8 +147,44 @@ a{
     .action-container{
         flex-direction: column;
     }
+
     .share-btn{
         margin-left: 0;
         margin-top: 0.7rem;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(20px);
+    }
+    to {
+        transform: translateY(0);
     }
 }
