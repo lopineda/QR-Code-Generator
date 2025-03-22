@@ -1,88 +1,89 @@
-const download = document.querySelector(".download");
-const dark = document.querySelector(".dark");
-const light = document.querySelector(".light");
+// Element references
+const downloadBtn = document.querySelector(".download");
+const darkInput = document.querySelector(".dark");
+const lightInput = document.querySelector(".light");
 const qrContainer = document.querySelector("#qr-code");
-const qrText = document.querySelector(".qr-text");
+const qrTextInput = document.querySelector(".qr-text");
 const shareBtn = document.querySelector(".share-btn");
-const sizes = document.querySelector(".sizes");
+const sizeSelector = document.querySelector(".sizes");
 
-dark.addEventListener("input", handleDarkColor);
-light.addEventListener("input", handleLightColor);
-qrText.addEventListener("input", handleQRText);
-sizes.addEventListener("change", handleSize);
-shareBtn.addEventListener("click", handleShare)
+// Event listeners
+darkInput.addEventListener("input", handleDarkColor);
+lightInput.addEventListener("input", handleLightColor);
+qrTextInput.addEventListener("input", handleQRText);
+sizeSelector.addEventListener("change", handleSize);
+shareBtn.addEventListener("click", handleShare);
 
+// Defaults
 const defaultUrl = "https://github.com/lopineda";
-let colorlight = "#fff"
-    colordark = "#000",
-    text = defaultUrl,
-    size = 300;
+let colorLight = "#ffffff";
+let colorDark = "#000000";
+let text = defaultUrl;
+let size = 400;
 
+// Color handlers
 function handleDarkColor(e) {
     colorDark = e.target.value;
     generateQRCode();
 }
 
-function handleLightColor(e) {
-    colorlight = e.target.value;
+function handleLightColor(e) {  
+    colorLight = e.target.value;
     generateQRCode();
 }
 
+// Text input handler
 function handleQRText(e) {
-    const value = e.target.value;
-    text = value;
-    if (!value) {
-        text = defaultUrl;
-    }
+    text = e.target.value || defaultUrl;
     generateQRCode();
 }
 
+// Size handler
+function handleSize(e) {
+    size = parseInt(e.target.value, 10);
+    generateQRCode();
+}
+
+// Generate QR Code
 async function generateQRCode() {
     qrContainer.innerHTML = "";
-    new QRCode("qr-code", {
-        text,
-        height: size,
-        width: size,
-        colordark,
-        colorlight
+    new QRCode(qrContainer, {
+    text,
+    width: size,
+    height: size,
+    colorDark,
+    colorLight,
     });
-    download.href = await resolveDataUrl();
+    downloadBtn.href = await resolveDataUrl();
 }
 
+// Share QR Code
 async function handleShare() {
     setTimeout(async () => {
-        try {
-            const base64url = await resolveDataUrl();
-            const blob = await (await fetch(base64url)).blob();
-            const file = new File([blob], "QRCode.png", {
-                type: blob.type,
-            });
-            await navigator.share({
-                files: [file],
-                title: text,
-            });
-        } catch (error) {
-            alert("Your browser doesn't support sharing.");
-        }
+    try {
+        const base64url = await resolveDataUrl();
+        const blob = await (await fetch(base64url)).blob();
+        const file = new File([blob], "QRCode.png", { type: blob.type });
+        await navigator.share({ files: [file], title: text });
+    } catch (error) {
+        alert("Your browser doesn't support sharing.");
+    }
     }, 100);
 }
 
-function handleSize(e) {
-    size = e.target.value;
-    generateQRCode();
-}
-
+// Convert to Data URL
 function resolveDataUrl() {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            const img = document.querySelector("#qr-code img");
-            if(img.currentSrc){
-                resolve(img.currentSrc);
-                return;
-            }
-            const canvas = document.querySelector("canvas");
-            resolve(canvas.toDataURL());
-        }, 50);
+    return new Promise((resolve) => {
+    setTimeout(() => {
+        const img = qrContainer.querySelector("img");
+        if (img?.currentSrc) {
+        return resolve(img.currentSrc);
+        }
+        const canvas = qrContainer.querySelector("canvas");
+        resolve(canvas.toDataURL());
+    }, 50);
     });
 }
+
+// Init
 generateQRCode();
